@@ -33,7 +33,13 @@ const UserSchema = new Schema(
       ], // Regex for email validation
     },
     DOB: {
-      type: Date, // Corrected the syntax
+      type: Date,
+      validate: {
+        validator: function (value) {
+          return value <= new Date();
+        },
+        message: "Date of birth must be in the past",
+      },
     },
     isVerified: {
       type: Boolean,
@@ -45,11 +51,24 @@ const UserSchema = new Schema(
       state: { type: String, default: null },
       postalCode: { type: String, default: null },
     },
+    Doctors:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
+      default: []
+    }]
   },
   {
-    timestamps: true, // Adds `createdAt` and `updatedAt` fields
+    timestamps: true, // Adds `createdAt` and `updatedAt` fields  
   }
 );
+
+UserSchema.pre("save", async function (next) {
+  if(this.isModified("password")){
+    const bcrypt = require("bcrypt");
+    this.password = await bcrypt.hash(this.password, 10)
+  }
+  next();
+})
 
 // Export the model
 export const UserModel = mongoose.models.User || mongoose.model("User", UserSchema);
