@@ -42,7 +42,7 @@ const DoctorSchema = new Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     address: {
       street: { type: String, default: "", trim: true },
@@ -50,11 +50,11 @@ const DoctorSchema = new Schema(
       state: { type: String, default: "", trim: true },
       postalCode: { type: String, default: "", trim: true },
     },
-    specification: {
-      type: String,
-      required: [true, "Please add your specification"],
-      enum: ["Cardiology", "Dermatology", "Pediatrics", "General Medicine"], 
-    },
+    speciality: {
+      type: [mongoose.Schema.Types.ObjectId], 
+      ref: "Specialty",
+      required: [true, "Please select your speciality"],
+    },    
     qualification: {
       type: String,
       required: [true, "Qualification is required"],

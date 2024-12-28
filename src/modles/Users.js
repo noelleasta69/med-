@@ -43,7 +43,10 @@ const UserSchema = new Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    verifyCodeExpiry: {
+      type: Date
     },
     address: {
       street: { type: String, default: null },
